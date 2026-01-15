@@ -1,5 +1,9 @@
 # Graph Builder Frontend
 
+
+https://github.com/user-attachments/assets/db2e174a-7531-4622-a8c1-4103b7e5f948
+
+
 ## Acceptance Criteria
 
 To consider the project working as expected, the following criteria must be met:
