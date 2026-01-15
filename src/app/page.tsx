@@ -1,65 +1,122 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState, useCallback } from 'react';
+import { useGraphQuery } from '@/hooks';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { GraphForm } from '@/components/GraphForm';
+import { GraphVisualization } from '@/components/GraphVisualization';
+import { NodeDetails } from '@/components/NodeDetails';
+import { LoadingSpinner, Card } from '@/components/ui';
+
+/**
+ * HomePage - Main application orchestrator
+ * 
+ * Architecture:
+ * - 3-column responsive layout (Form | Visualization | Details)
+ * - Global states: graphId, selectedNodeId
+ * - Optimized handlers with useCallback
+ * - Data fetching with React Query
+ * 
+ * Flow:
+ * 1. User creates graph → onGraphCreated(graphId)
+ * 2. Automatic graph fetch → useGraphQuery
+ * 3. User clicks node → onNodeClick(nodeId)
+ * 4. Automatic related topics fetch → useRelatedTopics (in NodeDetails)
+ */
+export default function HomePage() {
+  // Global application states
+  const [graphId, setGraphId] = useState<string | null>(null);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  // Fetch current graph
+  const { data: graphData, isLoading: isLoadingGraph } = useGraphQuery(graphId);
+
+  /**
+   * Optimized handler for graph creation
+   * Updates graphId and resets node selection
+   */
+  const handleGraphCreated = useCallback((id: string) => {
+    setGraphId(id);
+    setSelectedNodeId(null);
+  }, []);
+
+  /**
+   * Optimized handler for node clicks
+   * Updates selected node to show details
+   */
+  const handleNodeClick = useCallback((nodeId: string) => {
+    setSelectedNodeId(nodeId);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+      {/* Header */}
+      <Header />
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Sidebar - Form */}
+          <aside className="lg:col-span-3">
+            <GraphForm onGraphCreated={handleGraphCreated} />
+          </aside>
+
+          {/* Center - Graph Visualization */}
+          <section className="lg:col-span-6">
+            {!graphId && !isLoadingGraph && (
+              <Card>
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <svg
+                    className="h-24 w-24 text-gray-300 mb-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                    Start by creating your first graph!
+                  </h2>
+                  <p className="text-gray-500 max-w-md">
+                    Use the form on the left to enter a list of topics and create your interactive knowledge graph
+                  </p>
+                </div>
+              </Card>
+            )}
+
+            {isLoadingGraph && (
+              <Card>
+                <div className="flex items-center justify-center py-16">
+                  <LoadingSpinner size="xl" message="Generating graph..." />
+                </div>
+              </Card>
+            )}
+
+            {graphData && !isLoadingGraph && (
+              <GraphVisualization
+                graphData={graphData}
+                onNodeClick={handleNodeClick}
+                isLoading={isLoadingGraph}
+              />
+            )}
+          </section>
+
+          {/* Right Sidebar - Node Details */}
+          <aside className="lg:col-span-3">
+            <NodeDetails graphId={graphId} nodeId={selectedNodeId} />
+          </aside>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

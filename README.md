@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Graph Builder Frontend
 
-## Getting Started
+## Acceptance Criteria
 
-First, run the development server:
+To consider the project working as expected, the following criteria must be met:
+- The backend API must be running and accessible at port `8000`.
+- The frontend should connect successfully to the API endpoints listed above.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# Graph Builder FE
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Frontend project in Next.js for graph visualization and construction.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone the repository:
 
-## Learn More
+   ```bash
+   git clone <repo-url>
+   cd graph-builder-fe
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Install dependencies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Start the development server:
 
-## Deploy on Vercel
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Available Endpoints
+
+You can use the following API endpoints:
+
+- `/api/graph` – Create and fetch graphs
+- `/api/graph/{id}` – Get details for a specific graph
+- `/api/related-topics` – Fetch related topics for nodes
+
+
+## Troubleshooting
+
+- If the frontend cannot connect to the API, make sure the backend is running and accessible at port `8000`.
+- Check that the environment variable `NEXT_PUBLIC_API_URL` matches the backend URL and port.
+- If you see CORS errors, verify backend CORS settings allow requests from the frontend URL.
+- For any other issues, check the browser console and backend logs for error details.
+
+## Backend Repository
+
+You can find the backend code and documentation here:
+
+- [Graph Builder Backend](https://github.com/jorge6242/graph-builder-api)
+
+- **Design Patterns:** Use patterns such as Container/Presentational, component composition, and separation of concerns.
+- **SOLID Principles:** Apply SOLID principles to keep the code scalable and maintainable.
+- **Custom Hooks:** Centralize reusable logic in custom hooks located in `src/hooks`.
+- **Reusable Components:** Create reusable and decoupled components in `src/components`.
+- **Strict Typing:** Use TypeScript and define types in `src/types` for better safety and clarity.
+- **State Management:** Prefer React Query and React Context for data fetching and global state management.
+- **Styling:** Use CSS Modules or Tailwind to keep styles encapsulated and consistent.
+
+---
